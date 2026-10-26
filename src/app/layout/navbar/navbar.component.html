@@ -4,13 +4,24 @@
   <div class="flex items-center gap-3">
     <button
       type="button"
-      (click)="toggle.emit()"
-      [attr.aria-expanded]="mobileOpen"
+      (click)="toggleMobile.emit()"
+      [attr.aria-expanded]="isMobileSidebarOpen"
       aria-controls="mobile-navigation"
       aria-label="Open navigation"
       class="rounded-lg p-2 text-heading lg:hidden"
     >
       <app-icon name="menu" />
+    </button>
+    <button
+      type="button"
+      (click)="toggleDesktop.emit()"
+      [attr.aria-expanded]="!isSidebarCollapsed"
+      aria-controls="desktop-navigation"
+      [attr.aria-label]="isSidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'"
+      [title]="isSidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'"
+      class="hidden rounded-lg p-2 text-heading hover:bg-background lg:inline-flex"
+    >
+      <app-icon [name]="isSidebarCollapsed ? 'panel-left-open' : 'panel-left-close'" />
     </button>
     <div>
       <p class="font-semibold text-heading">{{ pageTitle() }}</p>

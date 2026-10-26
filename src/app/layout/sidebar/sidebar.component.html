@@ -1,17 +1,29 @@
-<div class="flex h-full flex-col bg-sidebar px-5 pb-6 pt-8 text-white">
+<div
+  class="flex h-full flex-col bg-sidebar pb-6 pt-8 text-white"
+  [class]="collapsed ? 'px-3' : 'px-5'"
+>
   <a
     routerLink="/"
     (click)="navigate.emit()"
-    class="flex items-center gap-3 px-2 text-xl font-bold tracking-tight"
-    ><span class="flex h-9 w-9 items-center justify-center rounded-lg bg-primary"
-      ><app-icon name="stocks" /></span
-    >MarketDash</a
+    aria-label="MarketDash home"
+    [title]="collapsed ? 'MarketDash home' : ''"
+    class="flex items-center text-xl font-bold tracking-tight"
+    [class]="collapsed ? 'justify-center' : 'gap-3 px-2'"
   >
-  <p
-    class="mb-4 mt-12 px-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-sidebar-muted"
-  >
-    Workspace
-  </p>
+    <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary"
+      ><app-icon name="stocks"
+    /></span>
+    @if (!collapsed) {
+      <span>MarketDash</span>
+    }
+  </a>
+  <div class="mb-4 mt-12 h-4">
+    @if (!collapsed) {
+      <p class="px-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-sidebar-muted">
+        Workspace
+      </p>
+    }
+  </div>
   <nav aria-label="Main navigation" class="space-y-2">
     @for (item of links; track item.path) {
       <a
@@ -20,9 +32,16 @@
         [routerLinkActiveOptions]="{ exact: true }"
         ariaCurrentWhenActive="page"
         (click)="navigate.emit()"
-        class="flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium text-white transition-colors hover:bg-white/5 hover:text-white"
-        ><app-icon [name]="item.icon" />{{ item.label }}</a
+        [attr.aria-label]="item.label"
+        [title]="collapsed ? item.label : ''"
+        class="flex items-center rounded-lg px-3 py-3 text-sm font-medium text-white transition-colors hover:bg-white/5 hover:text-white"
+        [class]="collapsed ? 'justify-center' : 'gap-3'"
       >
+        <app-icon [name]="item.icon" />
+        @if (!collapsed) {
+          <span>{{ item.label }}</span>
+        }
+      </a>
     }
   </nav>
   <div class="mt-auto pt-16"></div>

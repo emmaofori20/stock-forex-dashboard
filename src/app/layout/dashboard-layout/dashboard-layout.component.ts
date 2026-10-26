@@ -17,24 +17,34 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
   templateUrl: './dashboard-layout.component.html',
 })
 export class DashboardLayoutComponent {
-  mobileOpen = false;
+  isSidebarCollapsed = false;
+  isMobileSidebarOpen = false;
   private previousFocus: HTMLElement | null = null;
+  @ViewChild('content') content?: ElementRef<HTMLElement>;
   @ViewChild('drawer') drawer?: ElementRef<HTMLElement>;
   @ViewChild('closeButton') set closeButton(button: ElementRef<HTMLButtonElement> | undefined) {
     button?.nativeElement.focus();
   }
-  openMenu() {
-    this.previousFocus = document.activeElement as HTMLElement;
-    this.mobileOpen = true;
+  toggleSidebar(): void {
+    this.isSidebarCollapsed = !this.isSidebarCollapsed;
   }
-  @HostListener('document:keydown.escape') closeMenu() {
-    if (this.mobileOpen) {
-      this.mobileOpen = false;
+  toggleMobileSidebar(): void {
+    if (this.isMobileSidebarOpen) {
+      this.closeMobileSidebar();
+      return;
+    }
+    this.previousFocus = document.activeElement as HTMLElement;
+    this.isMobileSidebarOpen = true;
+  }
+  @HostListener('document:keydown.escape') closeMobileSidebar() {
+    if (this.isMobileSidebarOpen) {
+      this.isMobileSidebarOpen = false;
+      this.content?.nativeElement.removeAttribute('inert');
       this.previousFocus?.focus();
     }
   }
   @HostListener('window:resize') onResize() {
-    if (window.innerWidth >= 1024) this.closeMenu();
+    if (window.innerWidth >= 1024) this.closeMobileSidebar();
   }
   trapFocus(event: KeyboardEvent) {
     if (event.key !== 'Tab') return;

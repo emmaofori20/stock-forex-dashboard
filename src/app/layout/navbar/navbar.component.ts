@@ -11,8 +11,10 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
 })
 export class NavbarComponent {
   private router = inject(Router);
-  @Output() toggle = new EventEmitter<void>();
-  @Input() mobileOpen = false;
+  @Output() toggleDesktop = new EventEmitter<void>();
+  @Output() toggleMobile = new EventEmitter<void>();
+  @Input() isMobileSidebarOpen = false;
+  @Input() isSidebarCollapsed = false;
   readonly pageTitle = toSignal(
     this.router.events.pipe(
       filter((event) => event instanceof NavigationEnd),

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { IconComponent } from '../../shared/components/icon/icon.component';
 @Component({
@@ -8,6 +8,7 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
   templateUrl: './sidebar.component.html',
 })
 export class SidebarComponent {
+  @Input() collapsed = false;
   @Output() navigate = new EventEmitter<void>();
   readonly links = [
     { path: '/', label: 'Overview', icon: 'overview' },

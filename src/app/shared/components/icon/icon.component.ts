@@ -29,6 +29,8 @@ export class IconComponent {
     forex: 'M4 7h16l-4-4 M20 17H4l4 4',
     chart: 'M4 4v16h17 M8 15v-4 M13 15V7 M18 15v-6',
     arrow: 'M5 12h14 M14 7l5 5-5 5',
+    'panel-left-close': 'M3 3h18v18H3z M9 3v18 M16 8l-4 4 4 4',
+    'panel-left-open': 'M3 3h18v18H3z M9 3v18 M13 8l4 4-4 4',
     menu: 'M4 6h16 M4 12h16 M4 18h16',
     close: 'M6 6l12 12 M6 18L18 6',
     info: 'M12 11v6 M12 7h.01 M22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0',

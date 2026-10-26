@@ -1,9 +1,21 @@
 <app-toast-container />
 <a href="#main-content" class="skip-link">Skip to content</a>
-<aside class="fixed inset-y-0 left-0 hidden w-64 lg:block"><app-sidebar /></aside>
-@if (mobileOpen) {
+<aside
+  id="desktop-navigation"
+  class="fixed inset-y-0 left-0 hidden overflow-x-hidden transition-[width] duration-200 motion-reduce:transition-none lg:block"
+  [class]="isSidebarCollapsed ? 'w-20' : 'w-64'"
+>
+  <app-sidebar [collapsed]="isSidebarCollapsed" />
+</aside>
+@if (isMobileSidebarOpen) {
   <div class="fixed inset-0 z-50 lg:hidden" (keydown)="trapFocus($event)">
-    <div class="absolute inset-0 bg-heading/50" (click)="closeMenu()"></div>
+    <button
+      type="button"
+      tabindex="-1"
+      aria-label="Close navigation backdrop"
+      class="absolute inset-0 bg-heading/50"
+      (click)="closeMobileSidebar()"
+    ></button>
     <aside
       #drawer
       id="mobile-navigation"
@@ -16,23 +28,32 @@
         #closeButton
         type="button"
         aria-label="Close navigation"
-        (click)="closeMenu()"
+        (click)="closeMobileSidebar()"
         class="absolute right-3 top-3 rounded-md p-2 text-white"
       >
         <app-icon name="close" /></button
-      ><app-sidebar (navigate)="closeMenu()" />
+      ><app-sidebar (navigate)="closeMobileSidebar()" />
     </aside>
   </div>
 }
-<div class="min-h-screen min-w-0 lg:ml-64">
-  <app-navbar [mobileOpen]="mobileOpen" (toggle)="openMenu()" />
+<div
+  class="min-h-screen min-w-0 transition-[margin-left] duration-200 motion-reduce:transition-none"
+  [class]="isSidebarCollapsed ? 'lg:ml-20' : 'lg:ml-64'"
+  #content
+  [attr.inert]="isMobileSidebarOpen ? '' : null"
+>
+  <app-navbar
+    [isMobileSidebarOpen]="isMobileSidebarOpen"
+    [isSidebarCollapsed]="isSidebarCollapsed"
+    (toggleDesktop)="toggleSidebar()"
+    (toggleMobile)="toggleMobileSidebar()"
+  />
   <main id="main-content" tabindex="-1" class="mx-auto max-w-[1440px] px-5 py-8 sm:px-9 sm:py-10">
     <router-outlet />
   </main>
   <footer
     class="mx-5 mt-4 flex flex-wrap justify-between gap-2 border-t border-border py-6 text-[11px] text-body sm:mx-9"
   >
-    <span>MarketDash </span
-    ><span>Alpha Vantage </span>
+    <span>MarketDash </span><span>Alpha Vantage </span>
   </footer>
 </div>

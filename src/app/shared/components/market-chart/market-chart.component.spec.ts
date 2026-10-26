@@ -125,6 +125,18 @@ describe('MarketChartComponent D3 rendering', () => {
     fixture.detectChanges();
     expect(element.querySelector('path.price-line')?.getAttribute('d')).not.toMatch(/NaN|Infinity/);
   });
+  it('redraws for sidebar expansion and collapse without a window resize', async () => {
+    const { element } = await render();
+    for (const width of [976, 800, 976]) {
+      chartWidth = width;
+      notifyResize();
+      expect(element.querySelector('svg')?.getAttribute('viewBox')).toBe('0 0 ' + width + ' 320');
+      expect(element.querySelectorAll('path.price-line').length).toBe(1);
+      expect(element.querySelector('path.price-line')?.getAttribute('d')).not.toMatch(
+        /NaN|Infinity/,
+      );
+    }
+  });
   it('redraws at mobile widths without duplicate elements and disconnects on destroy', async () => {
     const { fixture, element } = await render();
     chartWidth = 300;
