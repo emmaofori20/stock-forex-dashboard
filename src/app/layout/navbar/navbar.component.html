@@ -1,0 +1,19 @@
+<header
+  class="flex min-h-18 items-center justify-between gap-4 border-b border-border bg-surface px-5 sm:px-9"
+>
+  <div class="flex items-center gap-3">
+    <button
+      type="button"
+      (click)="toggle.emit()"
+      [attr.aria-expanded]="mobileOpen"
+      aria-controls="mobile-navigation"
+      aria-label="Open navigation"
+      class="rounded-lg p-2 text-heading lg:hidden"
+    >
+      <app-icon name="menu" />
+    </button>
+    <div>
+      <p class="font-semibold text-heading">{{ pageTitle() }}</p>
+    </div>
+  </div>
+</header>

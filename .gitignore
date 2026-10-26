@@ -42,3 +42,11 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+# Local credentials, generated browser configuration and Netlify state
+.env
+.env.*
+!.env.example
+.netlify/
+
+/src/environments/environment.local.ts

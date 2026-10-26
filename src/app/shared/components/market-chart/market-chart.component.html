@@ -1,0 +1,43 @@
+<section
+  class="overflow-hidden rounded-card border border-border bg-surface shadow-sm"
+  [attr.aria-label]="title"
+>
+  <div class="flex flex-wrap items-center justify-between gap-3 border-b border-border px-6 py-5">
+    <div>
+      <h2 class="font-semibold text-heading">
+        {{ title }}<span class="ml-2 text-sm font-normal text-body">{{ symbol }}</span>
+      </h2>
+      <p class="mt-1 max-w-xl text-xs leading-5 text-body">{{ subtitle }}</p>
+    </div>
+    <span
+      class="rounded-md border border-border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-body"
+      >Daily history</span
+    >
+  </div>
+  <div #container class="min-w-0 pt-4">
+    <svg
+      #svg
+      [class.hidden]="!points.length"
+      class="block w-full overflow-visible"
+      role="group"
+      [attr.aria-label]="symbol + ' daily closing chart'"
+    ></svg>
+    @if (!points.length) {
+      <div class="flex min-h-80 flex-col items-center justify-center gap-3 px-6 py-12 text-center">
+        <app-icon name="chart" class="!h-8 !w-8 text-primary" />
+        <h3 class="font-semibold text-heading">No chart data available</h3>
+        <p class="max-w-sm text-sm leading-6 text-body">
+          There are no valid observations for {{ symbol || 'this instrument' }}. Choose another
+          instrument or provide dated values.
+        </p>
+      </div>
+    }
+  </div>
+  @if (points.length) {
+    <p class="border-t border-border px-6 py-3 text-[11px] leading-5 text-body">
+      {{ points.length }} daily observations. Hover, touch, or use arrow keys on the chart to
+      inspect. Daily closing values, not live streaming prices. The vertical axis is scaled to the
+      data range.
+    </p>
+  }
+</section>

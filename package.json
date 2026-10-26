@@ -3,10 +3,12 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "configure:env": "node scripts/configure-environment.mjs",
+    "postinstall": "node scripts/configure-environment.mjs --allow-empty",
+    "start": "node scripts/configure-environment.mjs && ng serve",
+    "build": "node scripts/configure-environment.mjs && ng build",
+    "watch": "node scripts/configure-environment.mjs && ng build --watch --configuration development",
+    "test": "node scripts/configure-environment.mjs --allow-empty && ng test"
   },
   "private": true,
   "packageManager": "npm@11.2.0",
@@ -17,6 +19,7 @@
     "@angular/forms": "^22.2.0",
     "@angular/platform-browser": "^22.2.0",
     "@angular/router": "^22.2.0",
+    "d3": "^7.9.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },
@@ -24,9 +27,17 @@
     "@angular/build": "^22.2.4",
     "@angular/cli": "^22.2.4",
     "@angular/compiler-cli": "^22.2.0",
+    "@tailwindcss/postcss": "^4.1.12",
+    "@types/d3": "^7.4.3",
     "jsdom": "^30.0.0",
+    "postcss": "^8.5.3",
     "prettier": "^3.8.1",
+    "tailwindcss": "^4.1.12",
     "typescript": "~6.0.2",
     "vitest": "^5.0.0"
+  },
+  "engines": {
+    "node": "^24.15.0",
+    "npm": ">=11.2.0"
   }
 }
