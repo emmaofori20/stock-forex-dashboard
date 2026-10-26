@@ -210,3 +210,14 @@ https://docs.netlify.com/build/frameworks/framework-setup-guides/angular/.
 A successful local test/build is not a successful public deployment. Record the
 actual URL and these results after deployment; until then public hosting, CORS,
 and provider access from that origin remain unverified.
+
+## Dependency audit at deployment preparation
+
+The clean installation and final verification on October 26, 2026 passed all
+54 tests and the production build. `npm audit --omit=dev` reported no production
+dependency vulnerabilities. The full audit reported two development-tool entries
+(one low, one high) involving `@angular/build` and its nested Vite 8.3.2.
+These tools are not shipped as a server on Netlify. Review a compatible patched
+Angular build-tool release before exposing the local development server; the
+suggested forced audit fix changes the Angular build-tool release and was not
+applied as part of deployment configuration.
