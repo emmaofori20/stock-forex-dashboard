@@ -1,0 +1,56 @@
+<section class="mt-6 overflow-hidden rounded-card border border-border bg-surface">
+  <div class="flex flex-wrap items-center justify-between gap-2 px-6 py-5">
+    <h2 class="font-semibold text-heading">
+      {{ marketType === MarketType.Stock ? 'Closing price history' : 'Exchange-rate history' }}
+    </h2>
+    <span class="text-xs">{{ symbol }} / {{ totalRecords }} records</span>
+  </div>
+  <div class="overflow-x-auto">
+    <table class="w-full text-left text-xs">
+      <caption class="sr-only">Alpha Vantage daily closing values for {{ symbol }}, newest first.</caption>
+      <thead class="border-y border-border bg-background text-body">
+        <tr>
+          <th scope="col" class="px-6 py-3 font-medium">Market date</th>
+          <th scope="col" class="px-6 py-3 text-right font-medium">
+            {{ marketType === MarketType.Stock ? 'Close (USD)' : 'Closing rate' }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (point of visibleRecords; track point.date.getTime()) {
+          <tr class="border-b border-border last:border-0 hover:bg-background">
+            <th scope="row" class="whitespace-nowrap px-6 py-3 font-normal">{{ formatDate(point.date) }}</th>
+            <td class="px-6 py-3 text-right font-medium text-heading tabular-nums">{{ formatValue(point.value) }}</td>
+          </tr>
+        } @empty {
+          <tr><td colspan="2" class="px-6 py-10 text-center">{{ emptyMessage }}</td></tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  <footer class="border-t border-border px-6 py-4">
+    <div class="flex flex-wrap items-center justify-between gap-4 text-xs">
+      <p role="status" class="tabular-nums">Showing {{ firstRecord }}?{{ lastRecord }} of {{ totalRecords }} records</p>
+      <label class="flex items-center gap-2">
+        Records per page
+        <select aria-label="Records per page" [value]="pageSize" (change)="changePageSize(+$any($event.target).value)"
+          class="rounded-lg border border-border bg-background px-3 py-2 text-heading">
+          @for (size of pageSizes; track size) { <option [value]="size">{{ size }}</option> }
+        </select>
+      </label>
+      @let buttonClass = 'min-h-9 min-w-9 rounded-lg border border-border px-3 py-2 text-xs font-medium text-heading hover:bg-background disabled:cursor-not-allowed disabled:opacity-40';
+      <nav aria-label="Historical data pagination" class="flex flex-wrap items-center gap-1.5">
+        <button type="button" [class]="buttonClass" [disabled]="currentPage === 1" (click)="changePage(currentPage - 1)">Previous</button>
+        @if (totalPages > 1) {
+          @for (page of pages; track page) {
+            <button type="button" [class]="buttonClass" [class.bg-primary-light]="currentPage === page"
+              [class.text-primary]="currentPage === page" [attr.aria-current]="currentPage === page ? 'page' : null"
+              [attr.aria-label]="'Page ' + page" (click)="changePage(page)">{{ page }}</button>
+          }
+        }
+        <button type="button" [class]="buttonClass" [disabled]="currentPage === totalPages" (click)="changePage(currentPage + 1)">Next</button>
+      </nav>
+    </div>
+    <p class="mt-4 text-xs leading-5 text-body">Source: Alpha Vantage ? Daily historical closing prices</p>
+  </footer>
+</section>

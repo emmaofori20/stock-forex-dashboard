@@ -132,60 +132,13 @@
     "
   />
 }
-<section class="mt-6 overflow-hidden rounded-card border border-border bg-surface">
-  <div class="flex flex-wrap items-center justify-between gap-2 px-6 py-5">
-    <h2 class="font-semibold text-heading">
-      {{ marketType === MarketType.Stock ? 'Closing price history' : 'Exchange-rate history' }}
-    </h2>
-    <span class="text-xs">{{ selectedSymbol }} / {{ history.length }} records</span>
-  </div>
-  <div class="overflow-x-auto">
-    <table class="w-full text-left text-xs">
-      <caption class="sr-only">
-        Alpha Vantage daily closing values for
-        {{
-          selectedSymbol
-        }}, newest first.
-      </caption>
-      <thead class="border-y border-border bg-background text-body">
-        <tr>
-          <th scope="col" class="px-6 py-3 font-medium">Market date</th>
-          <th scope="col" class="px-6 py-3 text-right font-medium">
-            {{ marketType === MarketType.Stock ? 'Close (USD)' : 'Closing rate' }}
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (point of history.slice().reverse(); track point.date.getTime()) {
-          <tr class="border-b border-border last:border-0 hover:bg-background">
-            <th scope="row" class="whitespace-nowrap px-6 py-3 font-normal">
-              {{ formatDate(point.date) }}
-            </th>
-            <td class="px-6 py-3 text-right font-medium text-heading tabular-nums">
-              {{ formatValue(point.value) }}
-            </td>
-          </tr>
-        } @empty {
-          <tr>
-            <td colspan="2" class="px-6 py-10 text-center">
-              {{
-                state().status === 'loading'
-                  ? 'Loading daily observations...'
-                  : state().status === 'error'
-                    ? 'History could not be loaded. Use Retry above.'
-                    : 'No valid daily closing observations are available.'
-              }}
-            </td>
-          </tr>
-        }
-      </tbody>
-    </table>
-  </div>
-</section>
-<p class="mt-4 text-xs leading-5 text-body">
-  Source: Alpha Vantage. Daily historical closes, not live streaming prices. Market dates follow the
-  provider trading calendar.
-</p>
+<app-historical-data-table
+  [observations]="history"
+  [marketType]="marketType"
+  [symbol]="selectedSymbol"
+  precisionMode="standard"
+  [emptyMessage]="state().status === 'loading' ? 'Loading daily observations...' : state().status === 'error' ? 'History could not be loaded. Use Retry above.' : 'No valid daily closing observations are available.'"
+/>
 
 <app-modal
   [open]="detailsOpen"

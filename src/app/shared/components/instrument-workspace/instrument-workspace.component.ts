@@ -1,3 +1,4 @@
+import { HistoricalDataTableComponent } from '../historical-data-table/historical-data-table.component';
 import { MarketType } from '../../../core/enums/market-type';
 import { Component, Input, OnInit, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -17,7 +18,7 @@ import { MarketChartComponent } from '../market-chart/market-chart.component';
 @Component({
   selector: 'app-instrument-workspace',
   standalone: true,
-  imports: [FormsModule, MarketChartComponent, ModalComponent],
+  imports: [FormsModule, MarketChartComponent, ModalComponent, HistoricalDataTableComponent],
   templateUrl: './instrument-workspace.component.html',
 })
 export class InstrumentWorkspaceComponent implements OnInit {
