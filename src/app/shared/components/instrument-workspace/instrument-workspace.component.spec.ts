@@ -1,3 +1,5 @@
+import { By } from '@angular/platform-browser';
+import { HistoricalDataTableComponent } from '../historical-data-table/historical-data-table.component';
 import { MarketType } from '../../../core/enums/market-type';
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
@@ -95,4 +97,62 @@ describe('Direct API workspace states', () => {
     expect(element.textContent).toContain('Base: EUR / Quote: USD');
     expect(TestBed.inject(NotificationService).toasts().length).toBe(0);
   });
+  for (const marketType of [MarketType.Stock, MarketType.Forex]) {
+    it(
+      'paginates 100 loaded ' +
+        marketType +
+        ' records without HTTP and resets on instrument changes',
+      async () => {
+        const { view, element, http } = await render(marketType);
+        const stock = marketType === MarketType.Stock;
+        const series = Object.fromEntries(
+          Array.from({ length: 100 }, (_, index) => [
+            new Date(Date.UTC(2026, 0, index + 1)).toISOString().slice(0, 10),
+            { '4. close': String(100 + index) },
+          ]),
+        );
+        const response = { [stock ? 'Time Series (Daily)' : 'Time Series FX (Daily)']: series };
+        http.expectOne(() => true).flush(response);
+        view.detectChanges();
+        await view.whenStable();
+        const table = view.debugElement.query(By.directive(HistoricalDataTableComponent))
+          .componentInstance as HistoricalDataTableComponent;
+        expect(element.querySelectorAll('tbody tr').length).toBe(10);
+        const next = Array.from(element.querySelectorAll('app-historical-data-table button')).find(
+          (b) => b.textContent?.trim() === 'Next',
+        ) as HTMLButtonElement;
+        next.click();
+        view.detectChanges();
+        expect(table.currentPage).toBe(2);
+        const size = element.querySelector<HTMLSelectElement>('app-historical-data-table select')!;
+        size.value = '20';
+        size.dispatchEvent(new Event('change'));
+        view.detectChanges();
+        expect(table.totalPages).toBe(5);
+        expect(element.querySelectorAll('tbody tr').length).toBe(20);
+        table.changePage(5);
+        view.detectChanges();
+        await new Promise((r) => setTimeout(r, 250));
+        http.expectNone(() => true);
+        expect(view.componentInstance.history.length).toBe(100);
+        const instruments = stock ? STOCKS : FOREX;
+        view.componentInstance.selectInstrument(instruments[1].symbol);
+        view.detectChanges();
+        expect(table.currentPage).toBe(1);
+        await new Promise((r) => setTimeout(r, 250));
+        http.expectOne(() => true).flush(response);
+        view.detectChanges();
+        await view.whenStable();
+        table.changePage(3);
+        view.detectChanges();
+        view.componentInstance.selectInstrument(instruments[0].symbol);
+        view.detectChanges();
+        await new Promise((r) => setTimeout(r, 250));
+        view.detectChanges();
+        expect(table.currentPage).toBe(1);
+        expect(table.totalRecords).toBe(100);
+        http.expectNone(() => true);
+      },
+    );
+  }
 });

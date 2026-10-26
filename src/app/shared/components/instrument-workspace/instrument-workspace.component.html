@@ -137,7 +137,13 @@
   [marketType]="marketType"
   [symbol]="selectedSymbol"
   precisionMode="standard"
-  [emptyMessage]="state().status === 'loading' ? 'Loading daily observations...' : state().status === 'error' ? 'History could not be loaded. Use Retry above.' : 'No valid daily closing observations are available.'"
+  [emptyMessage]="
+    state().status === 'loading'
+      ? 'Loading daily observations...'
+      : state().status === 'error'
+        ? 'History could not be loaded. Use Retry above.'
+        : 'No valid daily closing observations are available.'
+  "
 />
 
 <app-modal
